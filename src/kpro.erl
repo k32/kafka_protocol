@@ -588,7 +588,7 @@ do_decode_message(Offset, <<Crc:32/unsigned-integer, Body/binary>>, Acc) ->
       [Msg | Acc];
     false ->
       Bin = decompress(Compression, Value),
-      %% relative offsets breake continuation, can not pass in Acc here.
+      %% relative offsets breaks continuation, can not pass in Acc here.
       MsgsReversed = decode_message_stream(Bin, _Acc = []),
       maybe_assign_offsets(Offset, MsgsReversed) ++ Acc
   end.
@@ -597,7 +597,7 @@ do_decode_message(Offset, <<Crc:32/unsigned-integer, Body/binary>>, Acc) ->
 -spec maybe_assign_offsets(offset(), [message()]) -> [message()].
 maybe_assign_offsets(Offset, [#kafka_message{offset = Offset} | _] = Msgs) ->
   %% broker assigned 'real' offsets to the messages
-  %% either downverted for version 0 fetch request
+  %% either downverted for version 0~2 fetch request
   %% or message format is 0.9.0.0 on disk
   %% do nothing
   Msgs;
